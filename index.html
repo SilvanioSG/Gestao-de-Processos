@@ -1,0 +1,1209 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Framework de Gestão de Processos | Silvanio Gois</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: rgb(39, 98, 141);
+            --primary-dark: rgb(29, 73, 105);
+            --primary-light: rgb(69, 138, 191);
+            --secondary-color: rgb(245, 245, 245);
+            --accent-color: rgb(255, 193, 7);
+            --success-color: rgb(46, 125, 50);
+            --warning-color: rgb(237, 108, 2); /* Cor para os Insights */
+            --text-color: rgb(51, 51, 51);
+            --light-text: rgb(119, 119, 119);
+            --border-radius: 8px;
+            --box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background-color: #f9f9f9;
+            scroll-behavior: smooth;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* --- ESTILOS: INSIGHT DO ESPECIALISTA --- */
+        .insight-box {
+            margin-top: 1.2rem;
+            padding: 1.2rem;
+            background-color: #fff9e6; /* Fundo levemente amarelado */
+            border-left: 4px solid var(--warning-color);
+            border-radius: 4px;
+            font-size: 0.95rem;
+            color: var(--text-color);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        .insight-title {
+            color: var(--warning-color);
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            letter-spacing: 0.5px;
+        }
+        /* --------------------------------------------- */
+
+        /* Header */
+        header {
+            background: linear-gradient(to right, var(--primary-dark), var(--primary-color));
+            color: white;
+            padding: 2.5rem 0;
+            margin-bottom: 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 2rem;
+        }
+
+        .profile-section {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+            flex: 1;
+        }
+
+        .profile-photo {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            border: 5px solid rgba(255, 255, 255, 0.3);
+            object-fit: cover;
+            box-shadow: var(--box-shadow);
+        }
+
+        .title-section h1 {
+            font-size: 2.2rem;
+            margin-bottom: 0.5rem;
+            line-height: 1.2;
+        }
+
+        .title-section h2 {
+            font-size: 1.2rem;
+            font-weight: 400;
+            opacity: 0.9;
+            margin-bottom: 1rem;
+        }
+
+        .contact-info {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .whatsapp-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: white;
+            background-color: rgba(255, 255, 255, 0.15);
+            padding: 0.7rem 1.2rem;
+            border-radius: var(--border-radius);
+            text-decoration: none;
+            transition: var(--transition);
+            font-weight: 500;
+        }
+
+        .whatsapp-link:hover {
+            background-color: rgba(255, 255, 255, 0.25);
+            transform: translateY(-3px);
+        }
+
+        /* Navigation */
+        .main-nav {
+            background-color: white;
+            border-bottom: 1px solid #eee;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        .nav-container {
+            display: flex;
+            justify-content: center;
+            padding: 0.8rem 0;
+            position: relative;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            justify-content: center;
+            transition: var(--transition);
+        }
+
+        .nav-link {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            border-radius: var(--border-radius);
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+            white-space: nowrap;
+        }
+
+        .nav-link:hover, .nav-link.active {
+            background-color: rgba(39, 98, 141, 0.1);
+            color: var(--primary-dark);
+        }
+
+        .menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--primary-color);
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0.5rem;
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 1001;
+        }
+
+        /* Framework Timeline */
+        .framework-timeline {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+            margin: 3rem 0;
+            position: relative;
+        }
+
+        .framework-timeline:before {
+            content: "";
+            position: absolute;
+            left: 30px;
+            top: 0;
+            bottom: 0;
+            width: 3px;
+            background: linear-gradient(to bottom, var(--primary-color), var(--accent-color));
+            z-index: 1;
+        }
+
+        .timeline-item {
+            display: flex;
+            gap: 2rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        .timeline-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 60px;
+            height: 60px;
+            background-color: var(--primary-color);
+            color: white;
+            border-radius: 50%;
+            font-size: 1.5rem;
+            flex-shrink: 0;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .timeline-content {
+            flex: 1;
+            padding: 1.5rem;
+            background-color: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+        }
+
+        .timeline-content h3 {
+            color: var(--primary-dark);
+            margin-bottom: 1rem;
+            font-size: 1.4rem;
+        }
+
+        /* Main Content */
+        main {
+            padding: 1rem 0 3rem;
+        }
+
+        .intro-section {
+            text-align: center;
+            margin-bottom: 3rem;
+            padding: 2rem;
+            background-color: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .intro-section:before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(to right, var(--primary-color), var(--accent-color));
+        }
+
+        .intro-section p {
+            font-size: 1.1rem;
+            max-width: 900px;
+            margin: 0 auto;
+            color: var(--light-text);
+        }
+
+        .section-title {
+            font-size: 1.8rem;
+            color: var(--primary-dark);
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 3px solid var(--accent-color);
+            display: inline-block;
+        }
+
+        /* Content Cards */
+        .content-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .content-card {
+            background-color: white;
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            box-shadow: var(--box-shadow);
+            transition: var(--transition);
+            border-top: 5px solid var(--primary-color);
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .content-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .card-title {
+            font-size: 1.5rem;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.7rem;
+        }
+
+        /* Process Flow */
+        .process-flow-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .process-flow {
+            background-color: white;
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            box-shadow: var(--box-shadow);
+            border-top: 4px solid var(--primary-color);
+        }
+
+        .process-flow.as-is {
+            border-top-color: #4CAF50;
+        }
+
+        .process-flow.to-be {
+            border-top-color: #2196F3;
+        }
+
+        .process-title {
+            font-size: 1.3rem;
+            color: var(--primary-dark);
+            margin-bottom: 1.5rem;
+            text-align: center;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid;
+        }
+
+        .process-title.as-is {
+            color: #4CAF50;
+            border-bottom-color: #4CAF50;
+        }
+
+        .process-title.to-be {
+            color: #2196F3;
+            border-bottom-color: #2196F3;
+        }
+
+        .process-step {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px dashed #eee;
+        }
+
+        .process-step:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        .step-number {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 36px;
+            height: 36px;
+            background-color: var(--primary-color);
+            color: white;
+            border-radius: 50%;
+            font-weight: bold;
+            margin-right: 1rem;
+            flex-shrink: 0;
+        }
+
+        .as-is .step-number {
+            background-color: #4CAF50;
+        }
+
+        .to-be .step-number {
+            background-color: #2196F3;
+        }
+        
+        /* Estilos específicos para a tabela 5W2H */
+        .w2h-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: 1rem;
+        }
+        
+        .w2h-item {
+            background-color: #f8f9fa;
+            padding: 10px 15px;
+            border-radius: 4px;
+            border-left: 3px solid var(--primary-light);
+            font-size: 0.9rem;
+        }
+        
+        .w2h-item strong {
+            color: var(--primary-dark);
+            display: block;
+            margin-bottom: 3px;
+        }
+
+        /* Botão "Voltar ao Topo" */
+        .back-to-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 45px;
+            height: 45px;
+            background-color: var(--primary-color);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(20px);
+            transition: all 0.4s ease;
+            z-index: 999;
+            font-size: 0.9rem;
+        }
+
+        .back-to-top.visible {
+            opacity: 0.8;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .back-to-top:hover {
+            opacity: 1;
+            background-color: var(--primary-dark);
+            transform: translateY(-5px);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25);
+        }
+
+        /* Footer */
+        footer {
+            background-color: var(--primary-dark);
+            color: white;
+            padding: 2.5rem 0;
+            text-align: center;
+            margin-top: 3rem;
+        }
+
+        .footer-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 2rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .footer-links a {
+            color: white;
+            text-decoration: none;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .footer-links a:hover {
+            color: var(--accent-color);
+        }
+
+        .copyright {
+            opacity: 0.8;
+            font-size: 0.9rem;
+            margin-top: 1rem;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .profile-section {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .title-section h1 {
+                font-size: 1.8rem;
+            }
+            
+            .menu-toggle {
+                display: block;
+            }
+            
+            .nav-links {
+                display: none;
+                flex-direction: column;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                right: 0;
+                background-color: white;
+                padding: 1rem;
+                box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+                border-radius: 0 0 var(--border-radius) var(--border-radius);
+                z-index: 1000;
+                max-height: 70vh;
+                overflow-y: auto;
+            }
+            
+            .nav-links.active {
+                display: flex;
+            }
+            
+            .nav-link {
+                padding: 0.8rem 1rem;
+                border-bottom: 1px solid #f0f0f0;
+                width: 100%;
+            }
+            
+            .nav-link:last-child {
+                border-bottom: none;
+            }
+            
+            .nav-container {
+                justify-content: flex-start;
+                padding: 0.8rem 0;
+            }
+            
+            .process-flow-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .framework-timeline:before {
+                left: 25px;
+            }
+            
+            .timeline-icon {
+                width: 50px;
+                height: 50px;
+                font-size: 1.2rem;
+            }
+            
+            .content-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .back-to-top {
+                bottom: 20px;
+                right: 20px;
+                width: 40px;
+                height: 40px;
+            }
+            
+            .w2h-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .profile-photo {
+                width: 120px;
+                height: 120px;
+            }
+            
+            .title-section h1 {
+                font-size: 1.5rem;
+            }
+            
+            .section-title {
+                font-size: 1.5rem;
+            }
+            
+            .footer-links {
+                flex-direction: column;
+                gap: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="profile-section">
+                    <img src="Executivo_Silvanio_Gestor.PNG" alt="Silvanio Gois" class="profile-photo" onerror="this.src='https://ui-avatars.com/api/?name=Silvanio+Gois&size=150&background=27628D&color=fff&bold=true'">
+                    <div class="title-section">
+                        <h1>Minha Metodologia de Gestão de Processos</h1>
+                        <h2>Como executo a Iniciação, Modificação e Consolidação de Resultados</h2>
+                        <div class="contact-info">
+                            <span><strong>Silvanio Gois - Estratégia e Gestão de Processos</strong></span>
+                            <a href="https://wa.me/5513988301094" target="_blank" class="whatsapp-link">
+                                <i class="fab fa-whatsapp"></i> Falar Comigo
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <nav class="main-nav">
+        <div class="container nav-container">
+            <button class="menu-toggle" id="menuToggle" aria-label="Abrir menu de navegação">
+                <i class="fas fa-bars"></i>
+            </button>
+            
+            <div class="nav-links" id="navLinks">
+                <a href="#framework" class="nav-link"><i class="fas fa-sitemap"></i> Meu Framework</a>
+                <a href="#mapeamento" class="nav-link"><i class="fas fa-project-diagram"></i> Mapeamento</a>
+                <a href="#implementacao" class="nav-link"><i class="fas fa-rocket"></i> Implementação</a>
+                <a href="#monitoramento" class="nav-link"><i class="fas fa-chart-bar"></i> Monitoramento</a>
+                <a href="#modelos" class="nav-link"><i class="fas fa-brain"></i> Modelos Mentais</a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container">
+        <section id="framework" class="intro-section">
+            <h2 class="section-title">Minha Abordagem Estruturada</h2>
+            <p>Não acredito em "balas de prata". Este framework é fruto da minha experiência prática no campo. Ele não é apenas teórico; é o roteiro exato que utilizo para transformar caos em processos mensuráveis e controlados. Minha atuação conecta cada fase logicamente à próxima, criando um ciclo virtuoso de melhoria.</p>
+        </section>
+
+        <section>
+            <h2 class="section-title"><i class="fas fa-sitemap"></i> O Ciclo de 6 Fases que Executo</h2>
+            
+            <div class="framework-timeline">
+                <div class="timeline-item">
+                    <div class="timeline-icon">
+                        <i class="fas fa-search"></i>
+                    </div>
+                    <div class="timeline-content">
+                        <h3>FASE 1: Meu Diagnóstico e Imersão</h3>
+                        <p><strong>O que eu faço:</strong> Não confio apenas em manuais antigos. Eu realizo uma imersão na operação real ("Gemba") para entender como o trabalho realmente flui versus como a diretoria imagina que flui.</p>
+                        <ul style="margin-top: 1rem; padding-left: 1.5rem;">
+                            <li>Entrevistas com quem executa (não apenas quem gerencia)</li>
+                            <li>Identificação da "dor real" vs "dor percebida"</li>
+                            <li>Matriz de Priorização: Foco nos 20% dos processos que geram 80% do impacto</li>
+                        </ul>
+                        
+                        <div class="insight-box">
+                            <span class="insight-title"><i class="fas fa-lightbulb"></i> Insight do Especialista</span>
+                            "O maior erro é tentar mapear tudo de uma vez. Minha estratégia é isolar o processo crítico — aquele que, se consertado hoje, paga o projeto amanhã."
+                        </div>
+            
+                        <div style="margin-top: 1rem; padding: 1rem; background-color: rgba(39, 98, 141, 0.05); border-radius: var(--border-radius);">
+                            <strong>Meus Entregáveis:</strong> Diagnóstico de Maturidade, Matriz de Priorização e Mapa de Gaps Imediatos.
+                        </div>
+                    </div>
+                </div>
+            
+                <div class="timeline-item">
+                    <div class="timeline-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <div class="timeline-content">
+                        <h3>FASE 2: Blindagem do Processo (FMEA)</h3>
+                        <p><strong>O que eu faço:</strong> Antes de desenhar a solução, eu estresso o cenário atual. Utilizo a metodologia FMEA para antecipar onde o processo pode quebrar e criar 'vacinas' preventivas.</p>
+                        <ul style="margin-top: 1rem; padding-left: 1.5rem;">
+                            <li>Cálculo do Risco (Severidade x Ocorrência x Detecção)</li>
+                            <li>Criação de planos de contingência para falhas críticas</li>
+                            <li>Identificação de dependências ocultas entre departamentos</li>
+                        </ul>
+            
+                        <div class="insight-box">
+                            <span class="insight-title"><i class="fas fa-lightbulb"></i> Insight do Especialista</span>
+                            "Muitos gestores desenham o 'Caminho Feliz'. Eu desenho pensando no dia que o sistema cai ou o funcionário chave falta. Um processo robusto sobrevive ao caos."
+                        </div>
+            
+                        <div style="margin-top: 1rem; padding: 1rem; background-color: rgba(39, 98, 141, 0.05); border-radius: var(--border-radius);">
+                            <strong>Meus Entregáveis:</strong> Matriz de Riscos Operacionais e Plano de Contingência.
+                        </div>
+                    </div>
+                </div>
+            
+                <div class="timeline-item">
+                    <div class="timeline-icon">
+                        <i class="fas fa-project-diagram"></i>
+                    </div>
+                    <div class="timeline-content">
+                        <h3>FASE 3: Redesenho Estratégico (AS-IS → TO-BE)</h3>
+                        <p><strong>O que eu faço:</strong> Projeto o estado futuro ideal (TO-BE) focado em eficiência. Não apenas digitalizo burocracia; eu elimino etapas que não agregam valor ao cliente final.</p>
+                        <ul style="margin-top: 1rem; padding-left: 1.5rem;">
+                            <li>Eliminação radical de desperdícios (Lean)</li>
+                            <li>Design de fluxo focado na experiência do usuário</li>
+                            <li>Definição clara de regras de negócio e automação</li>
+                        </ul>
+            
+                        <div class="insight-box">
+                            <span class="insight-title"><i class="fas fa-lightbulb"></i> Insight do Especialista</span>
+                            "Automação não resolve processo ruim, apenas o torna mais rápido. Primeiro eu simplifico e saneio o fluxo; só depois aplicamos tecnologia."
+                        </div>
+            
+                        <div style="margin-top: 1rem; padding: 1rem; background-color: rgba(39, 98, 141, 0.05); border-radius: var(--border-radius);">
+                            <strong>Meus Entregáveis:</strong> Fluxogramas Otimizados (BPMN) e Caderno de Regras de Negócio.
+                        </div>
+                    </div>
+                </div>
+            
+                <div class="timeline-item">
+                    <div class="timeline-icon">
+                        <i class="fas fa-rocket"></i>
+                    </div>
+                    <div class="timeline-content">
+                        <h3>FASE 4: Minha Estratégia de Implementação</h3>
+                        <p><strong>O que eu faço:</strong> A melhor teoria falha sem adesão das pessoas. Executo a virada de chave através de Pilotos Controlados, reduzindo o medo da mudança e ajustando em tempo real.</p>
+                        <ul style="margin-top: 1rem; padding-left: 1.5rem;">
+                            <li>Execução de projeto piloto em ambiente seguro</li>
+                            <li>Gestão da Mudança (Change Management) com as equipes</li>
+                            <li>Treinamento prático ("On the job")</li>
+                        </ul>
+            
+                        <div class="insight-box">
+                            <span class="insight-title"><i class="fas fa-lightbulb"></i> Insight do Especialista</span>
+                            "O sucesso da implementação é 20% técnico e 80% humano. Eu passo mais tempo ouvindo e treinando a equipe do que configurando ferramentas."
+                        </div>
+            
+                        <div style="margin-top: 1rem; padding: 1rem; background-color: rgba(39, 98, 141, 0.05); border-radius: var(--border-radius);">
+                            <strong>Meus Entregáveis:</strong> Processo Operando, Equipe Treinada e Manual de Procedimentos (POP).
+                        </div>
+                    </div>
+                </div>
+            
+                <div class="timeline-item">
+                    <div class="timeline-icon">
+                        <i class="fas fa-chart-bar"></i>
+                    </div>
+                    <div class="timeline-content">
+                        <h3>FASE 5: Gestão Baseada em Dados</h3>
+                        <p><strong>O que eu faço:</strong> Transformo o processo em números. Implemento painéis de controle que permitem à liderança tomar decisões baseadas em fatos, não em intuição.</p>
+                        <ul style="margin-top: 1rem; padding-left: 1.5rem;">
+                            <li>Definição de KPIs de Processo vs. KPIs de Resultado</li>
+                            <li>Criação de Dashboards de gestão à vista</li>
+                            <li>Monitoramento de SLA (Acordos de Nível de Serviço)</li>
+                        </ul>
+            
+                        <div class="insight-box">
+                            <span class="insight-title"><i class="fas fa-lightbulb"></i> Insight do Especialista</span>
+                            "Muitas métricas atrapalham. Eu ajudo a definir os 'Poucos Vitais' — os 3 a 5 indicadores que realmente mostram a saúde do negócio."
+                        </div>
+            
+                        <div style="margin-top: 1rem; padding: 1rem; background-color: rgba(39, 98, 141, 0.05); border-radius: var(--border-radius);">
+                            <strong>Meus Entregáveis:</strong> Dashboard de Controle e Relatórios de Performance.
+                        </div>
+                    </div>
+                </div>
+            
+                <div class="timeline-item">
+                    <div class="timeline-icon">
+                        <i class="fas fa-sync-alt"></i>
+                    </div>
+                    <div class="timeline-content">
+                        <h3>FASE 6: Cultura de Melhoria Contínua</h3>
+                        <p><strong>O que eu faço:</strong> Garanto que o processo não "morra" após minha saída. Instalo rituais de revisão (PDCA) para que a própria equipe continue evoluindo o método.</p>
+                        <ul style="margin-top: 1rem; padding-left: 1.5rem;">
+                            <li>Instalação de rituais de revisão mensal</li>
+                            <li>Tratativa sistemática de não-conformidades</li>
+                            <li>Mentoria para formação de "Donos do Processo" internos</li>
+                        </ul>
+            
+                        <div class="insight-box">
+                            <span class="insight-title"><i class="fas fa-lightbulb"></i> Insight do Especialista</span>
+                            "Processo é organismo vivo. Se ele está igual há 1 ano, provavelmente está obsoleto. Eu deixo a cultura de 'inconformismo positivo' instalada."
+                        </div>
+            
+                        <div style="margin-top: 1rem; padding: 1rem; background-color: rgba(39, 98, 141, 0.05); border-radius: var(--border-radius);">
+                            <strong>Meus Entregáveis:</strong> Ciclo PDCA Rodando e Plano de Evolução de Longo Prazo.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="mapeamento">
+            <h2 class="section-title"><i class="fas fa-project-diagram"></i> Mapeamento AS-IS → TO-BE</h2>
+            
+            <div class="content-card">
+                <h3 class="card-title">Como Conduzo a Transição de Estado</h3>
+                <p>O mapeamento é onde a estratégia encontra a realidade. Minha abordagem para a transição do estado atual (AS-IS) para o futuro (TO-BE) é rigorosa e colaborativa, garantindo que o novo desenho seja viável.</p>
+                
+                <div class="process-flow-container">
+                    <div class="process-flow as-is">
+                        <h3 class="process-title as-is"><i class="fas fa-map"></i> MEU LEVANTAMENTO AS-IS</h3>
+                        
+                        <div class="process-step">
+                            <div class="step-number">01</div>
+                            <div>
+                                <h4>Observação Direta (Shadowing)</h4>
+                                <p>Eu sento ao lado do executor. Documento as "gambiarras" e planilhas paralelas que não constam nos manuais oficiais.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="process-step">
+                            <div class="step-number">02</div>
+                            <div>
+                                <h4>Matriz de Responsabilidade</h4>
+                                <p>Defino claramente quem faz o quê (RACI). Frequentemente descubro que o problema não é o processo, mas a indefinição de papéis.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="process-step">
+                            <div class="step-number">03</div>
+                            <div>
+                                <h4>Caça aos Gargalos</h4>
+                                <p>Identifico matematicamente onde o trabalho para. Onde está o estoque parado? Onde está a espera?</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="process-flow to-be">
+                        <h3 class="process-title to-be"><i class="fas fa-bullseye"></i> MEU DESENHO TO-BE</h3>
+                        
+                        <div class="process-step">
+                            <div class="step-number">01</div>
+                            <div>
+                                <h4>Metas SMART</h4>
+                                <p>Não desenho por desenhar. Cada mudança deve ter um objetivo claro: "Reduzir tempo em 30%" ou "Eliminar erro X".</p>
+                            </div>
+                        </div>
+                        
+                        <div class="process-step">
+                            <div class="step-number">02</div>
+                            <div>
+                                <h4>Simplificação Agressiva</h4>
+                                <p>Aplico técnicas de eliminação e combinação. Se uma etapa não gera valor para o cliente nem é regulatória, eu a corto.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="process-step">
+                            <div class="step-number">03</div>
+                            <div>
+                                <h4>Travas de Qualidade</h4>
+                                <p>Projeto o novo fluxo com validações automáticas (Poka-yoke) para impedir que o erro avance para a próxima etapa.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="insight-box" style="margin-top: 2rem;">
+                    <span class="insight-title"><i class="fas fa-lightbulb"></i> Insight do Especialista</span>
+                    "O papel aceita tudo. O sistema trava. Por isso, antes de fechar o desenho TO-BE, eu valido o fluxo com quem vai operar a máquina, não só com o diretor. Se o operador não comprar a ideia, o processo morre na largada."
+                </div>
+            </div>
+        </section>
+
+        <section id="implementacao">
+            <h2 class="section-title"><i class="fas fa-rocket"></i> Implementação Controlada</h2>
+            
+            <div class="content-card">
+                <h3 class="card-title">Minha Tática de Implementação</h3>
+                <p>Eu fujo do "Big Bang" (virar tudo de uma vez). Minha metodologia privilegia a segurança operacional através de passos controlados.</p>
+                
+                <div class="content-grid">
+                    <div class="content-card">
+                        <h4><i class="fas fa-clipboard-check"></i> Etapa 1: Planejamento Realista</h4>
+                        <ul style="margin-top: 1rem; padding-left: 1.5rem;">
+                            <li>Definição de escopo travado</li>
+                            <li>Cronograma que respeita a operação</li>
+                            <li>Alinhamento de expectativas com a diretoria</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="content-card">
+                        <h4><i class="fas fa-flask"></i> Etapa 2: O Laboratório (Piloto)</h4>
+                        <ul style="margin-top: 1rem; padding-left: 1.5rem;">
+                            <li>Teste em ambiente controlado</li>
+                            <li>Coleta intensiva de feedback dos usuários</li>
+                            <li>Correção rápida de falhas de design</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="content-card">
+                        <h4><i class="fas fa-expand-arrows-alt"></i> Etapa 3: Expansão (Rollout)</h4>
+                        <ul style="margin-top: 1rem; padding-left: 1.5rem;">
+                            <li>Expansão gradual por setor/unidade</li>
+                            <li>Acompanhamento presencial ("Floor Support")</li>
+                            <li>Monitoramento da curva de adoção</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="content-card">
+                        <h4><i class="fas fa-anchor"></i> Etapa 4: Consolidação</h4>
+                        <ul style="margin-top: 1rem; padding-left: 1.5rem;">
+                            <li>Atualização formal dos POPs</li>
+                            <li>Treinamento de novos multiplicadores</li>
+                            <li>Entrega oficial da responsabilidade</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="process-flow" style="margin-top: 2rem; border-top-color: var(--success-color);">
+                    <h3 class="process-title" style="border-bottom: 2px solid var(--success-color); color: var(--success-color);"><i class="fas fa-list-check"></i> Minha Tática de Execução: 5W2H</h3>
+                    <p>Estratégia sem dono não acontece. Utilizo o framework 5W2H para garantir que ninguém saia da reunião sem saber exatamente o que deve entregar. Eu transformo o planejamento em micro-ações delegáveis.</p>
+                    
+                    <div class="w2h-grid">
+                        <div class="w2h-item"><strong>What (O quê):</strong> <span style="color:var(--light-text)">Qual é a ação exata a ser realizada?</span></div>
+                        <div class="w2h-item"><strong>Why (Por quê):</strong> <span style="color:var(--light-text)">Por que essa tarefa é vital para o todo?</span></div>
+                        <div class="w2h-item"><strong>Who (Quem):</strong> <span style="color:var(--light-text)">Quem é o CPF responsável?</span></div>
+                        <div class="w2h-item"><strong>When (Quando):</strong> <span style="color:var(--light-text)">Qual a data fatal de entrega?</span></div>
+                        <div class="w2h-item"><strong>Where (Onde):</strong> <span style="color:var(--light-text)">Em qual setor ou sistema?</span></div>
+                        <div class="w2h-item"><strong>How (Como):</strong> <span style="color:var(--light-text)">Qual o método de execução?</span></div>
+                        <div class="w2h-item" style="grid-column: 1 / -1; border-left-color: var(--accent-color);"><strong>How Much (Quanto Custa):</strong> <span style="color:var(--light-text)">Qual o custo de orçamento ou tempo?</span></div>
+                    </div>
+
+                    <div class="insight-box">
+                        <span class="insight-title"><i class="fas fa-lightbulb"></i> Insight do Especialista</span>
+                        "O 'Quem' é o mais importante. Se uma tarefa tem dois donos, ela não tem nenhum. Eu uso o 5W2H para eliminar a ambiguidade da delegação e cobrar resultados na semana seguinte."
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="modelos">
+            <h2 class="section-title"><i class="fas fa-brain"></i> Modelos Mentais que Utilizo</h2>
+            
+            <div class="content-card">
+                <h3 class="card-title">Ferramentas de Pensamento Estratégico</h3>
+                <p>Para resolver problemas complexos durante a consultoria, recorro a estes modelos mentais comprovados. São minhas ferramentas de 'bolso' para destravar situações difíceis.</p>
+                
+                <div class="process-flow-container">
+                    <div class="process-flow">
+                        <h3 class="process-title"><i class="fas fa-question-circle"></i> 5 PORQUÊS (Causa Raiz)</h3>
+                        <p style="margin-bottom: 1rem;">Eu não aceito a primeira resposta. Escavo até encontrar a origem sistêmica do erro.</p>
+                        <div class="process-step">
+                            <div class="step-number">1</div>
+                            <div>
+                                <h4>Problema Superficial</h4>
+                                <p>Ex: "A entrega atrasou". (Sintoma)</p>
+                            </div>
+                        </div>
+                        <div class="process-step" style="border:none;">
+                            <div class="step-number">...</div>
+                            <div>
+                                <h4>Causa Raiz Real</h4>
+                                <p>Ex: "Falta de gatilho de reabastecimento no sistema". (Onde eu atuo)</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="process-flow">
+                        <h3 class="process-title"><i class="fas fa-chess-board"></i> MATRIZ DE DECISÃO</h3>
+                        <p style="margin-bottom: 1rem;">Ajudo líderes a decidir o que fazer com base em Impacto vs. Esforço.</p>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1rem;">
+                            <div style="padding: 1rem; background-color: #4CAF50; color: white; border-radius: var(--border-radius);">
+                                <h5 style="margin: 0;">GANHOS RÁPIDOS</h5>
+                                <p style="margin-top: 0.5rem; font-size: 0.8rem;">Alto Impacto, Baixo Esforço. <strong>Foco aqui.</strong></p>
+                            </div>
+                            <div style="padding: 1rem; background-color: #2196F3; color: white; border-radius: var(--border-radius);">
+                                <h5 style="margin: 0;">PROJETOS MAIORES</h5>
+                                <p style="margin-top: 0.5rem; font-size: 0.8rem;">Alto Impacto, Alto Esforço.</p>
+                            </div>
+                            <div style="padding: 1rem; background-color: #FFC107; color: black; border-radius: var(--border-radius);">
+                                <h5 style="margin: 0;">POUCO VALOR</h5>
+                                <p style="margin-top: 0.5rem; font-size: 0.8rem;">Baixo Impacto, Baixo Esforço.</p>
+                            </div>
+                            <div style="padding: 1rem; background-color: #F44336; color: white; border-radius: var(--border-radius);">
+                                <h5 style="margin: 0;">TAREFAS INÚTEIS</h5>
+                                <p style="margin-top: 0.5rem; font-size: 0.8rem;">Baixo Impacto, Alto Esforço. <strong>Corto isso.</strong></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="margin-top: 2rem; background-color: #fcfcfc; border: 1px solid #eee; border-radius: var(--border-radius); padding: 1.5rem;">
+                    <h3 class="card-title" style="font-size: 1.3rem;"><i class="fas fa-hand-holding-usd"></i> A Lógica Financeira (ROI)</h3>
+                    <p>Processos não são apenas sobre fluxos, são sobre dinheiro. Utilizo o cálculo de ROI (Retorno sobre Investimento) para "vender" o projeto para a diretoria e provar o valor do meu trabalho.</p>
+                    
+                    <div style="display: flex; flex-wrap: wrap; gap: 2rem; margin-top: 1.5rem; align-items: center;">
+                        <div style="flex: 1; min-width: 300px; background-color: rgba(46, 125, 50, 0.1); padding: 1.5rem; border-radius: var(--border-radius); border-left: 5px solid var(--success-color);">
+                            <h4 style="color: var(--success-color); margin-bottom: 0.5rem;">Minha Fórmula de Prova</h4>
+                            <p style="font-style: italic; font-weight: 500; font-size: 1.1rem; color: var(--primary-dark);">ROI = (Ganho Obtido - Custo) / Custo</p>
+                            <p style="margin-top: 1rem; font-size: 0.9rem;">Se o resultado não for positivo e claro, o projeto não é prioritário. Eu busco a eficiência que paga a conta.</p>
+                        </div>
+                        
+                        <div style="flex: 1; min-width: 300px;">
+                            <h4 style="color: var(--primary-color); margin-bottom: 1rem;">Onde eu encontro o dinheiro:</h4>
+                            <ul style="list-style: none;">
+                                <li style="margin-bottom: 0.8rem; display: flex; align-items: center; gap: 0.5rem;"><i class="fas fa-check-circle" style="color: var(--success-color);"></i> Redução de horas extras (H/H)</li>
+                                <li style="margin-bottom: 0.8rem; display: flex; align-items: center; gap: 0.5rem;"><i class="fas fa-check-circle" style="color: var(--success-color);"></i> Eliminação de multas e retrabalho</li>
+                                <li style="margin-bottom: 0.8rem; display: flex; align-items: center; gap: 0.5rem;"><i class="fas fa-check-circle" style="color: var(--success-color);"></i> Custo de oportunidade (velocidade de entrega)</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="monitoramento">
+            <div class="content-card" style="background: linear-gradient(135deg, var(--primary-dark), var(--primary-color)); color: white;">
+                <h3 class="card-title" style="color: white;"><i class="fas fa-clipboard-check"></i> Meu Checklist de Sucesso</h3>
+                
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; margin-top: 2rem;">
+                    <div style="padding: 1.5rem; background-color: rgba(255, 255, 255, 0.1); border-radius: var(--border-radius);">
+                        <h4 style="color: white; margin-bottom: 1rem;">✓ PREPARAÇÃO</h4>
+                        <ul style="list-style: none; padding: 0;">
+                            <li style="margin-bottom: 0.8rem;"><i class="fas fa-check" style="color: var(--accent-color);"></i> Objetivo claro definido</li>
+                            <li style="margin-bottom: 0.8rem;"><i class="fas fa-check" style="color: var(--accent-color);"></i> Patrocínio da direção garantido</li>
+                        </ul>
+                    </div>
+                    
+                    <div style="padding: 1.5rem; background-color: rgba(255, 255, 255, 0.1); border-radius: var(--border-radius);">
+                        <h4 style="color: white; margin-bottom: 1rem;">✓ EXECUÇÃO</h4>
+                        <ul style="list-style: none; padding: 0;">
+                            <li style="margin-bottom: 0.8rem;"><i class="fas fa-check" style="color: var(--accent-color);"></i> Equipe treinada na nova rotina</li>
+                            <li style="margin-bottom: 0.8rem;"><i class="fas fa-check" style="color: var(--accent-color);"></i> Indicadores sendo medidos</li>
+                        </ul>
+                    </div>
+                    
+                    <div style="padding: 1.5rem; background-color: rgba(255, 255, 255, 0.1); border-radius: var(--border-radius);">
+                        <h4 style="color: white; margin-bottom: 1rem;">✓ SUSTENTAÇÃO</h4>
+                        <ul style="list-style: none; padding: 0;">
+                            <li style="margin-bottom: 0.8rem;"><i class="fas fa-check" style="color: var(--accent-color);"></i> Plano de contingência pronto</li>
+                            <li style="margin-bottom: 0.8rem;"><i class="fas fa-check" style="color: var(--accent-color);"></i> Rotina de auditoria ativa</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <a href="#" class="back-to-top" id="backToTop">
+        <i class="fas fa-chevron-up"></i>
+    </a>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-links">
+                    <a href="https://www.silvaniogois.com.br/" target="_blank">
+                        <i class="fas fa-external-link-alt"></i> Visite meu Site
+                    </a>
+                    <a href="#framework">
+                        <i class="fas fa-arrow-up"></i> Voltar ao Início
+                    </a>
+                </div>
+                <div class="copyright">
+                    © 2026 Silvanio Gois - Estratégia e Gestão de Processos
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const backToTop = document.getElementById('backToTop');
+            const navLinks = document.querySelectorAll('.nav-link');
+            const menuToggle = document.getElementById('menuToggle');
+            const navLinksContainer = document.getElementById('navLinks');
+            
+            // Menu mobile toggle
+            menuToggle.addEventListener('click', function() {
+                navLinksContainer.classList.toggle('active');
+                const icon = menuToggle.querySelector('i');
+                icon.classList.toggle('fa-bars');
+                icon.classList.toggle('fa-times');
+            });
+            
+            // Fechar menu ao clicar em link (mobile)
+            navLinks.forEach(link => {
+                link.addEventListener('click', function() {
+                    if (window.innerWidth <= 768) {
+                        navLinksContainer.classList.remove('active');
+                        const icon = menuToggle.querySelector('i');
+                        icon.classList.remove('fa-times');
+                        icon.classList.add('fa-bars');
+                    }
+                    
+                    // Navegação suave
+                    const targetId = this.getAttribute('href');
+                    if(targetId === '#') return;
+                    
+                    const targetElement = document.querySelector(targetId);
+                    if(targetElement) {
+                        const navHeight = document.querySelector('.main-nav').offsetHeight;
+                        const offset = navHeight + 20;
+                        
+                        window.scrollTo({
+                            top: targetElement.offsetTop - offset,
+                            behavior: 'smooth'
+                        });
+                        
+                        // Ativar navegação
+                        navLinks.forEach(l => l.classList.remove('active'));
+                        this.classList.add('active');
+                    }
+                });
+            });
+            
+            // Botão "Voltar ao Topo"
+            window.addEventListener('scroll', function() {
+                if (window.scrollY > 500) {
+                    backToTop.classList.add('visible');
+                } else {
+                    backToTop.classList.remove('visible');
+                }
+                
+                // Ativar navegação baseada na rolagem
+                const sections = document.querySelectorAll('section');
+                const navHeight = document.querySelector('.main-nav').offsetHeight;
+                const offset = navHeight + 100;
+                
+                let currentSectionId = '';
+                sections.forEach(section => {
+                    if (section.id) {
+                        const sectionTop = section.offsetTop - offset;
+                        const sectionHeight = section.offsetHeight;
+                        if(window.scrollY >= sectionTop && window.scrollY < sectionTop + sectionHeight) {
+                            currentSectionId = '#' + section.id;
+                        }
+                    }
+                });
+                
+                navLinks.forEach(link => {
+                    link.classList.remove('active');
+                    if(link.getAttribute('href') === currentSectionId) {
+                        link.classList.add('active');
+                    }
+                });
+            });
+            
+            backToTop.addEventListener('click', function(e) {
+                e.preventDefault();
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
+            });
+            
+            // Fechar menu ao clicar fora (mobile)
+            document.addEventListener('click', function(event) {
+                if (window.innerWidth <= 768 && 
+                    !navLinksContainer.contains(event.target) && 
+                    !menuToggle.contains(event.target) && 
+                    navLinksContainer.classList.contains('active')) {
+                    navLinksContainer.classList.remove('active');
+                    const icon = menuToggle.querySelector('i');
+                    icon.classList.remove('fa-times');
+                    icon.classList.add('fa-bars');
+                }
+            });
+            
+            // Ajustar menu ao redimensionar
+            window.addEventListener('resize', function() {
+                if (window.innerWidth > 768) {
+                    navLinksContainer.style.display = 'flex';
+                    navLinksContainer.classList.remove('active');
+                    const icon = menuToggle.querySelector('i');
+                    icon.classList.remove('fa-times');
+                    icon.classList.add('fa-bars');
+                } else {
+                    navLinksContainer.style.display = '';
+                }
+            });
+            
+            // Animações
+            const observer = new IntersectionObserver(function(entries) {
+                entries.forEach(entry => {
+                    if(entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            }, { threshold: 0.1 });
+            
+            document.querySelectorAll('.content-card, .timeline-item, .process-flow, .insight-box').forEach(el => {
+                el.style.opacity = '0';
+                el.style.transform = 'translateY(20px)';
+                el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+                observer.observe(el);
+            });
+        });
+    </script>
+</body>
+</html>
